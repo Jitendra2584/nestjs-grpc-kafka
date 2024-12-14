@@ -1,16 +1,16 @@
+import { protobufPackage } from '@libs-common';
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { protobufPackage } from '@app/common';
+import { OrdersModule } from './orders.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AuthModule,
+    OrdersModule,
     {
       transport: Transport.GRPC,
       options: {
-        protoPath: join(__dirname, '../auth.proto'),
+        protoPath: join(__dirname, '../orders.proto'),
         package: protobufPackage,
       },
     },

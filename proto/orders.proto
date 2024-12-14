@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package order;
+
+// Order Message
+message IOrder {
+  string id = 1;                 // Unique identifier for the order
+  string customer_id = 2;        // Customer's unique ID
+  repeated string items = 3;     // List of items in the order
+  float total_price = 4;         // Total price of the order
+}
+
+// Create Order DTO
+message ICreateOrderRequestDto {
+  string customer_id = 1;        // Customer's unique ID
+  repeated string items = 2;     // List of items for the order
+  float total_price = 3;         // Total price for the order
+}
+
+// Update Order DTO
+message IUpdateOrderRequestDto {
+  string id = 1;                 // ID of the order to update
+  string customer_id = 2;        // Updated customer ID (if applicable)
+  repeated string items = 3;     // Updated list of items
+  float total_price = 4;         // Updated total price
+}
+
+// Get Order Request (for fetching by ID)
+message IGetOrderRequestDto {
+  string id = 1;  // The ID of the order to fetch
+}
+
+// List Orders Request (Optional, used for fetching all orders)
+message IListOrdersRequestDto {
+  string customer_id = 1; // Customer ID to filter orders (optional)
+}
+
+// Delete Order Request (for deleting by ID)
+message IDeleteOrderRequestDto {
+  string id = 1;  // The ID of the order to delete
+}
+
+// Service Definition for Order Service
+service OrderService {
+  // Create a new order
+  rpc CreateOrder(ICreateOrderRequestDto) returns (IOrder);
+
+  // Update an existing order
+  rpc UpdateOrder(IUpdateOrderRequestDto) returns (IOrder);
+
+  // Get an order by ID
+  rpc GetOrder(IGetOrderRequestDto) returns (IOrder);
+
+  // List all orders (or filter by customer ID)
+  rpc ListOrders(IListOrdersRequestDto) returns (IListOrdersResponse);
+
+  // Delete an order by ID
+  rpc DeleteOrder(IDeleteOrderRequestDto) returns (IDeleteOrderResponse);
+
+  // Stream orders with pagination
+  rpc QueryOrders(stream IPaginationDto) returns (stream IListOrdersResponse) {}
+}
+
+message IPaginationDto {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+// Response for List Orders
+message IListOrdersResponse {
+  repeated IOrder orders = 1;  // List of orders
+}
+
+// Response for Delete Order
+message IDeleteOrderResponse {
+  bool success = 1;  // True if the deletion was successful
+}

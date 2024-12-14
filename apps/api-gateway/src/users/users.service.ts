@@ -1,64 +1,85 @@
-import {
-  CreateUserDto,
-  PaginationDto,
-  UpdateUserDto,
-  USERS_SERVICE_NAME,
-  UsersServiceClient,
-} from '@app/common';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { AUTH_SERVICE } from './constants';
-import { ClientGrpc } from '@nestjs/microservices';
-import { ReplaySubject } from 'rxjs';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UserEntity } from '../entities';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
-export class UsersService implements OnModuleInit {
-  private usersService: UsersServiceClient;
+export class UsersService {
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
 
-  constructor(@Inject(AUTH_SERVICE) private client: ClientGrpc) {}
+  async create(body: CreateUserDto): Promise<UserEntity> {
+    // Check if username already exists
+    const [existingUserByUsername, existingUserByEmail] = await Promise.all([
+      this.userRepository.findOne({
+        where: { username: body.username },
+      }),
+      this.userRepository.findOne({
+        where: { email: body.email },
+      }),
+    ]);
 
-  onModuleInit() {
-    this.usersService =
-      this.client.getService<UsersServiceClient>(USERS_SERVICE_NAME);
-  }
+    // Check if username already exists
+    if (existingUserByUsername) {
+      throw new BadRequestException('Username already exists');
+    }
 
-  create(createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
-  }
+    // Check if email already exists
+    if (existingUserByEmail) {
+      throw new BadRequestException('Email already exists');
+    }
 
-  findAll() {
-    return this.usersService.findAllUsers({});
-  }
-
-  findOne(id: string) {
-    return this.usersService.findOneUser({ id });
-  }
-
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser({ id, ...updateUserDto });
-  }
-
-  remove(id: string) {
-    return this.usersService.removeUser({ id });
-  }
-
-  emailUsers() {
-    // return this.usersService.queryUsers(PaginationDtoStream);
-
-    const users$ = new ReplaySubject<PaginationDto>();
-
-    users$.next({ page: 0, skip: 10 });
-    users$.next({ page: 1, skip: 10 });
-    users$.next({ page: 2, skip: 10 });
-    users$.next({ page: 3, skip: 10 });
-    users$.next({ page: 4, skip: 10 });
-
-    users$.complete();
-
-    let chunkNumber = 1;
-
-    this.usersService.queryUsers(users$).subscribe((users) => {
-      console.log('chunk', chunkNumber, users);
-      chunkNumber += 1;
+    const user = await this.userRepository.save({
+      username: body.username,
+      password: body.password,
+      age: body.age,
+      email: body.email,
     });
+
+    return user;
+  }
+
+  async findAll(): Promise<UserEntity[]> {
+    return await this.userRepository.find();
+  }
+
+  async findOne(id: string): Promise<UserEntity> {
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    if (!updateUserDto) {
+      throw new BadRequestException('No data to update');
+    }
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const updatedData = {
+      socialMedia: updateUserDto.socialMedia
+        ? updateUserDto.socialMedia
+        : user.socialMedia,
+      age: updateUserDto.age ? updateUserDto.age : user.age,
+      username: updateUserDto.age ? updateUserDto.username : user.username,
+    };
+
+    await this.userRepository.update(id, updatedData);
+
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async remove(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    await this.userRepository.softDelete(id);
+    return user;
   }
 }
