@@ -10,7 +10,7 @@ import {
   OrderServiceController,
   OrderServiceControllerMethods,
   PaginationDto,
-} from '@libs-common';
+} from 'libs/src';
 import { Observable } from 'rxjs';
 
 @Controller()

@@ -18,9 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@libs-common": [
-        "libs/common/src/index.ts"
-      ]
+      "@libs": ["libs/src/index.ts"]
     }
   }
 }

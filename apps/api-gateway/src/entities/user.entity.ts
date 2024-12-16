@@ -1,4 +1,4 @@
-import { SocialMedia } from '@libs-common';
+import { SocialMedia } from 'libs/src';
 import {
   Column,
   CreateDateColumn,

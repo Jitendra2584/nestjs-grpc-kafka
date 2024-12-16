@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Min, NotEquals } from 'class-validator';
 
 import { Type } from 'class-transformer';
-import { SocialMedia } from '@libs-common';
+import { SocialMedia } from 'libs/src';
 
 export class UpdateUserDto {
   @ApiPropertyOptional({

@@ -12,7 +12,7 @@ import {
   ICreateOrderRequestDto,
   IListOrdersRequestDto,
   IUpdateOrderRequestDto,
-} from '@libs-common';
+} from 'libs/src';
 
 @Controller('orders')
 export class OrdersController {

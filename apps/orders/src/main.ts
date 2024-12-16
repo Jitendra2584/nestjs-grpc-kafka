@@ -1,4 +1,4 @@
-import { protobufPackage } from '@libs-common';
+import { protobufPackage } from 'libs/src';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';

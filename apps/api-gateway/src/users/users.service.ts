@@ -52,7 +52,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    if (!updateUserDto) {
+    if (Object.keys(updateUserDto).length === 0) {
       throw new BadRequestException('No data to update');
     }
     const user = await this.userRepository.findOne({ where: { id } });

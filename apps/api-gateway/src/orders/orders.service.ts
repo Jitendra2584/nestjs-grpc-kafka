@@ -6,7 +6,7 @@ import {
   ORDER_SERVICE_NAME,
   OrderServiceClient,
   PaginationDto,
-} from '@libs-common';
+} from 'libs/src';
 import { ORDER_SERVICE } from './constants';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ReplaySubject } from 'rxjs';

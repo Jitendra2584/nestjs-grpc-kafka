@@ -17,12 +17,8 @@ export const databaseSetting = (
     password: processEnv.DATABASE_PASSWORD,
     database: processEnv.DATABASE_NAME,
     migrationsTableName: 'typeorm_migrations',
-    entities: ['./dist/out-tsc/libs/core-database/**/*.entity.js'],
-    migrations: [
-      './dist/out-tsc/libs/core-database/src/typeorm/migrations/*.js',
-    ],
-    subscribers: [],
+    entities: ['./dist/**/*.entity.js'],
+    migrations: ['./dist/database/migrations/*.js'],
     logging: true,
-    synchronize: false,
   };
 };

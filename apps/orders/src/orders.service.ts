@@ -8,7 +8,7 @@ import {
   IOrder,
   IUpdateOrderRequestDto,
   PaginationDto,
-} from '@libs-common';
+} from 'libs/src';
 import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { randomUUID } from 'crypto';

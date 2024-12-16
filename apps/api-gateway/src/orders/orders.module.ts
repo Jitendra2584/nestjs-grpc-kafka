@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
-import { protobufPackage } from '@libs-common';
+import { protobufPackage } from 'libs/src';
 import { join } from 'path';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ORDER_SERVICE } from './constants';
