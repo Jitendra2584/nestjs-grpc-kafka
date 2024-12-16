@@ -18,7 +18,7 @@ export const databaseSetting = (
     database: processEnv.DATABASE_NAME,
     migrationsTableName: 'typeorm_migrations',
     entities: ['./dist/**/*.entity.js'],
-    migrations: ['./dist/database/migrations/*.js'],
+    migrations: ['./dist/libs/src/database/migrations/*.js'],
     logging: true,
   };
 };

@@ -17,7 +17,11 @@
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json",
-    "typeorm": "npx typeorm -d dist/database/cli-config.js"
+    "typeorm:cli": "rm -rf dist/ && tsc -p tsconfig.build.json && npx typeorm --dataSource dist/libs/src/database/cli.config.js",
+    "db:migrate:generate": "npm run typeorm:cli migration:generate -- --pretty libs/src/database/migrations/$npm_config_name",
+    "db:migrate:run": "npm run typeorm:cli  migration:run",
+    "db:migrate:revert": "npm run typeorm:cli  migration:revert",
+    "db:migrate:status": "npm run typeorm:cli migration:show"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
