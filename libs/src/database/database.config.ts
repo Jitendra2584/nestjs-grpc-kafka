@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { entities } from '../database/entities';
 import type { DataSourceOptions } from 'typeorm';
 
 /**
@@ -17,7 +17,7 @@ export const databaseSetting = (
     password: processEnv.DATABASE_PASSWORD,
     database: processEnv.DATABASE_NAME,
     migrationsTableName: 'typeorm_migrations',
-    entities: ['./dist/**/*.entity.js'],
+    entities: entities,
     migrations: ['./dist/libs/src/database/migrations/*.js'],
     logging: true,
   };
