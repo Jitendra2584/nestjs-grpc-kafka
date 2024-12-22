@@ -33,6 +33,9 @@ export class UserEntity {
   @Column({ type: 'boolean', nullable: false, default: false })
   subscribed: boolean;
 
+  @Column({ nullable: true })
+  refreshToken?: string;
+
   @CreateDateColumn({ name: 'created_at', nullable: true })
   created_at: Date;
 

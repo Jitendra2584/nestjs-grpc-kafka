@@ -4,11 +4,20 @@ import { AllExceptionsFilter, setupSwagger } from 'libs/src';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: true,
   });
+
+  // app.useGlobalFilters(new AllExceptionsFilter());
+
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || `http://localhost:${3000}`,
+    methods: 'GET,PUT,PATCH,POST,DELETE,OPTIONS',
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       enableDebugMessages: true,
@@ -23,14 +32,8 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new AllExceptionsFilter());
-
-  app.enableCors({
-    origin: process.env.CORS_ORIGIN || `http://localhost:${3000}`,
-    methods: 'GET,PUT,PATCH,POST,DELETE,OPTIONS',
-  });
-
   app.use(compression());
+  app.use(cookieParser());
   app.use(
     helmet({
       crossOriginEmbedderPolicy: false,
