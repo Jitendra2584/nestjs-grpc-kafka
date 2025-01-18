@@ -23,6 +23,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAllUsers() {
     return await this.usersService.findAll();
   }
@@ -32,7 +33,9 @@ export class UsersController {
   async findOneUser(@Param('id') id: string) {
     return await this.usersService.findOne(id);
   }
+
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -41,6 +44,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async removeUser(@Param('id') id: string) {
     return await this.usersService.remove(id);
   }

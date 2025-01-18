@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { ReturnUserType, UserEntity } from '@libs';
 import { hash } from 'bcryptjs';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
@@ -121,5 +123,11 @@ export class UsersService {
 
     await this.userRepository.softDelete(id);
     return result;
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS) // here you can set the cron expression e.g '0 * * * * *' for every minute
+  handleCron() {
+    this.logger.debug('Called when the current second is 0');
+    // Add your cron job logic here
   }
 }
